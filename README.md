@@ -13,6 +13,8 @@ The biggest pain point in 2026 is **Agentic AI & High-Throughput Microservice Ob
 * **Contextual Pivoting:** Engineers can instantly pivot from an infrastructure-level CPU metric on a bare-metal host down to an application log or an AI agent token span via the shared trace_id
 * **GenAI Semantic Guard:** Inspects OTel payloads in real-time to intercept LLM context token spikes and runaway agent loops.
 * **Columnar Native:** Built to stream directly into ClickHouse at millions of events per second with 10x lower memory footprint than traditional collectors.
+* **Single Pane of Glass:** Engineers don't need to switch tools between metrics dashboards (Prometheus), log search (Elasticsearch/ClickHouse), trace maps (Jaeger), and event streams (K8s events). Everything correlates instantly via the correlation_id.
+* **Automated Incident Root-Cause Analysis:** The pipeline evaluates metrics spikes, critical events, error logs, and failed traces concurrently to determine if a multi-domain systemic failure is occurring.
 
 ## 🚀 Quickstart (Local Test)
 1. Clone the repository:
