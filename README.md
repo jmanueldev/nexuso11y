@@ -9,6 +9,8 @@ The biggest pain point in 2026 is **Agentic AI & High-Throughput Microservice Ob
 
 ## ⚡ Key Features
 * **Zero-App-Change eBPF Tracing:** Automatically extracts RED metrics (Rate, Errors, Duration) from Linux sockets.
+* **Zero Blind Spots Across Estates:**  Whether legacy VMs or modern Kubernetes pods emit the data, it hits the exact same ingestion schema.
+* **Contextual Pivoting:** Engineers can instantly pivot from an infrastructure-level CPU metric on a bare-metal host down to an application log or an AI agent token span via the shared trace_id
 * **GenAI Semantic Guard:** Inspects OTel payloads in real-time to intercept LLM context token spikes and runaway agent loops.
 * **Columnar Native:** Built to stream directly into ClickHouse at millions of events per second with 10x lower memory footprint than traditional collectors.
 
