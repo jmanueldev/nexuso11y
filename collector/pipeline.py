@@ -38,6 +38,63 @@ async def ingest_traces(request: Request) -> Response:
         media_type="application/json"
     )
 
+@app.post("/v1/correlate")
+async def correlate_telemetry(request: Request) -> Response:
+    payload = await request.json()
+    
+    # Correlating L4 OSI metrics, Kubernetes pod metadata, and GenAI Agent status
+    domain_sources = payload.get("domains", {})
+    infrastructure_health = domain_sources.get("infra", "stable")
+    ai_agent_performance = domain_sources.get("ai_agent", {})
+    
+    correlation_alert = False
+    if infrastructure_health == "degraded" and ai_agent_performance.get("error_rate", 0) > 0.05:
+        correlation_alert = True # Multi-domain root cause discovered!
+
+    return Response(
+        content=json.dumps({
+            "correlation_status": "analyzed",
+            "cross_domain_link_detected": correlation_alert,
+            "action": "Isolate pod network namespace & route traffic to failover LLM"
+        }),
+        media_type="application/json"
+    )
+@app.post("/v1/telemetry/ingest")
+async def ingest_universal_telemetry(request: Request) -> Response:
+    start_time = time.time()
+    payload = await request.json()
+    
+    # Extract multi-domain components from any infrastructure type
+    infra_type = payload.get("infrastructure_type", "kubernetes") # bare-metal, virtualized, kubernetes
+    signal_type = payload.get("signal_type", "trace")             # log, metric, trace, alert
+    trace_id = payload.get("trace_id", "root-context-default")
+    
+    normalized_record = {
+        "timestamp": time.time(),
+        "infrastructure": infra_type,
+        "signal": signal_type,
+        "trace_id": trace_id,
+        "node_id": payload.get("node_id", "unknown-host"),
+        "attributes": payload.get("attributes", {})
+    }
+
+    # Cross-domain correlation logic
+    correlation_matched = False
+    if signal_type == "alert" and "latency_spike" in payload.get("alert_name", ""):
+        correlation_matched = True
+        normalized_record["action_plan"] = f"Correlated alert from {infra_type} infrastructure. Pulling matching traces for trace_id: {trace_id}."
+
+    processing_latency = (time.time() - start_time) * 1000
+    return Response(
+        content=json.dumps({
+            "status": "indexed_universally",
+            "infrastructure": infra_type,
+            "signal_processed": signal_type,
+            "correlation_active": correlation_matched,
+            "processing_latency_ms": round(processing_latency, 4)
+        }),
+        media_type="application/json"
+    )
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=4318)

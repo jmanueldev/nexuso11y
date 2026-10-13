@@ -1,0 +1,26 @@
+[sources.multi_infra_tcp]
+type = "socket"
+address = "0.0.0.0:5000"
+mode = "tcp"
+
+[transforms.infrastructure_enrichment]
+type = "remap"
+inputs = ["multi_infra_tcp"]
+source = '''
+# Automatically tag data source format based on origin metadata
+.resource.environment = "production"
+if is_nullish(.host.metal_type) {
+    .infrastructure_type = "kubernetes"
+} else {
+    .infrastructure_type = "bare_metal_or_vm"
+}
+'''
+
+[sinks.clickhouse_unified_storage]
+type = "clickhouse"
+inputs = ["infrastructure_enrichment"]
+endpoint = "http://clickhouse.observability.svc.cluster.local:8123"
+database = "nexus"
+table = "universal_telemetry_stream"
+batch.max_bytes = 5242880
+batch.timeout_secs = 1
