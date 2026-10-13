@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  nexus-collector:
+    build: ./collector
+    ports:
+      - "4318:4318"
+    environment:
+      - CLICKHOUSE_HOST=clickhouse
+    depends_on:
+      - clickhouse
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.3-alpine
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    environment:
+      - CLICKHOUSE_DB=nexus
+      - CLICKHOUSE_USER=default
+      - CLICKHOUSE_PASSWORD=securepassword
