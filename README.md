@@ -32,7 +32,7 @@ The biggest pain point in 2026 is **Agentic AI & High-Throughput Microservice Ob
 
 up:
 	docker compose up --build -d
-	@echo "NexusTelemetry stack is running on http://localhost:4318"
+	@echo "NexusO11y stack is running on http://localhost:4318"
 
 down:
 	docker compose down
